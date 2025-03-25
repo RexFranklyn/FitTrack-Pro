@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitTrack Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>FitTrack Pro</span>
+                </div>
+                
+                <div class="nav-links">
+                    <button id="dashboardBtn" class="active"><i class="fas fa-home"></i> Dashboard</button>
+                    <button id="workoutsBtn"><i class="fas fa-dumbbell"></i> Workouts</button>
+                    <button id="goalsBtn"><i class="fas fa-bullseye"></i> Goals</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- Dashboard Tab -->
+            <div id="dashboardTab" class="tab-content active">
+                <h1>Your Fitness Dashboard</h1>
+                <p>Welcome back! Here's your fitness progress at a glance.</p>
+                
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <span>Weekly Summary</span>
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="stats-container">
+                                <div class="stat-card">
+                                    <h3 id="weeklyWorkouts">0</h3>
+                                    <p>Workouts</p>
+                                </div>
+                                <div class="stat-card">
+                                    <h3 id="weeklyCalories">0</h3>
+                                    <p>Calories</p>
+                                </div>
+                                <div class="stat-card">
+                                    <h3 id="weeklyMinutes">0</h3>
+                                    <p>Minutes</p>
+                                </div>
+                                <div class="stat-card">
+                                    <h3 id="weeklyStreak">0</h3>
+                                    <p>Day Streak</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <span>Goal Progress</span>
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <div class="card-body">
+                            <div id="goalProgressContainer">
+                                <p class="empty-state">You haven't set any goals yet. <button id="createGoalBtn" class="button">Create a Goal</button></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <span>Recent Workouts</span>
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <div class="card-body">
+                            <div id="recentWorkoutsContainer">
+                                <ul class="workout-list" id="recentWorkoutsList">
+                                    <!-- Recent workouts will be inserted here -->
+                                </ul>
+                                <button id="logWorkoutBtn" class="button" style="margin-top: 1rem;">Log a Workout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <span>Activity Trends</span>
+                        <i class="fas fa-chart-area"></i>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="activityChart" class="chart-container"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Workouts Tab -->
+            <div id="workoutsTab" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h1>Your Workouts</h1>
+                    <button id="newWorkoutBtn" class="button"><i class="fas fa-plus"></i> New Workout</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span>Workout History</span>
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="card-body">
+                        <div id="workoutHistoryContainer">
+                            <ul class="workout-list" id="workoutHistoryList">
+                                <!-- Workout history will be inserted here -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Goals Tab -->
+            <div id="goalsTab" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h1>Your Fitness Goals</h1>
+                    <button id="newGoalBtn" class="button"><i class="fas fa-plus"></i> New Goal</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span>Current Goals</span>
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <div class="card-body">
+                        <div id="goalsContainer">
+                            <!-- Goals will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Workout Form Modal -->
+    <div id="workoutModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Log a Workout</h2>
+                <button class="close-button" id="closeWorkoutModal">&times;</button>
+            </div>
+            <form id="workoutForm">
+                <div class="form-group">
+                    <label for="workoutType">Workout Type</label>
+                    <select id="workoutType" required>
+                        <option value="">Select a type</option>
+                        <option value="Cardio">Cardio</option>
+                        <option value="Strength">Strength Training</option>
+                        <option value="Flexibility">Flexibility & Mobility</option>
+                        <option value="HIIT">HIIT</option>
+                        <option value="Sport">Sport</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="workoutDate">Date</label>
+                    <input type="date" id="workoutDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="workoutDuration">Duration (minutes)</label>
+                    <input type="number" id="workoutDuration" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="workoutCalories">Calories Burned</label>
+                    <input type="number" id="workoutCalories" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="workoutNotes">Notes</label>
+                    <textarea id="workoutNotes" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="button secondary" id="cancelWorkoutBtn">Cancel</button>
+                    <button type="submit" class="button">Save Workout</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Goal Form Modal -->
+    <div id="goalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Set a New Goal</h2>
+                <button class="close-button" id="closeGoalModal">&times;</button>
+            </div>
+            <form id="goalForm">
+                <div class="form-group">
+                    <label for="goalType">Goal Type</label>
+                    <select id="goalType" required>
+                        <option value="">Select a type</option>
+                        <option value="workouts">Number of Workouts</option>
+                        <option value="minutes">Total Minutes</option>
+                        <option value="calories">Calories Burned</option>
+                        <option value="streak">Day Streak</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="goalTarget">Target Value</label>
+                    <input type="number" id="goalTarget" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="goalDeadline">Target Date</label>
+                    <input type="date" id="goalDeadline" required>
+                </div>
+                <div class="form-group">
+                    <label for="goalNotes">Notes</label>
+                    <textarea id="goalNotes" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="button secondary" id="cancelGoalBtn">Cancel</button>
+                    <button type="submit" class="button">Save Goal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        Workout logged successfully!
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 FitTrack Pro. Your fitness journey, tracked.</p>
+        </div>
+    </footer>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
